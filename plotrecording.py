@@ -44,11 +44,31 @@ def process_scans_data(input_file):
     coordinates = np.array(coordinates)
     return coordinates
 
-# Input and output file names
+
+def save_to_ply(coordinates, output_file):
+    header = f"""ply
+format ascii 1.0
+element vertex {len(coordinates)}
+property float x
+property float y
+property float z
+end_header
+"""
+    with open(output_file, 'w') as f:
+        f.write(header)
+        np.savetxt(f, coordinates, fmt='%f %f %f')
+        
+# Input and output file names (output is stored in .ply to visualize in CloudCompare)
 input_file = "scans_data_with_angles.json"
+output_file="scans3D.ply"
 
 # Process scans data to get Cartesian coordinates
 coordinates = process_scans_data(input_file)
 
 # Plot the points in 3D
-plot_3d_scatter(coordinates)
+
+# (Plot using Matplot Lib {Very Slow})
+# plot_3d_scatter(coordinates)
+
+# Save the points to a PLY file
+save_to_ply(coordinates, output_file)
